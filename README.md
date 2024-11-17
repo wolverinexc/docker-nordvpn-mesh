@@ -70,7 +70,7 @@ DNS
 
 
 MESHNET
-# Info/Scripts for Meshnet from https://github.com/MattsTechInfo/Meshnet
+- Info/Scripts for Meshnet from https://github.com/MattsTechInfo/Meshnet
 
 #### Meshnet Permissions
 In this version of NordVPN, permissions must be configured directly on the client. NordVPN currently ALLOWS all peers connected to Meshnet by default for Fileshare and Remote access services and DENIES Routing and Local network services. Configuring peer permissions through the NordVPN account website is still in development and not currently available.
