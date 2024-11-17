@@ -4,7 +4,11 @@
 IFS=','
 
 # Enable Meshnet, this creates the interface and connects
-nordvpn set meshnet on
+if [[ ${MESHNET} != "FALSE" ]]; then
+  nordvpn set meshnet on
+else
+  exit 0
+fi
 
 # Set nickname of this instance on the Meshnet network
 if [[ -n ${NORDVPN_NICKNAME} ]]; then

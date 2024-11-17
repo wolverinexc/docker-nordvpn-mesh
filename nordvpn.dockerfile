@@ -15,7 +15,7 @@ ENV CHECK_CONNECTION_INTERVAL=60 \
   CONNECTION_FILTERS="" \
   REFRESH_CONNECTION_INTERVAL=120 \
   TECHNOLOGY=NordLynx \
-  NORDVPN_VERSION=${NORDVPN_VERSION}
+  NORDVPN_VERSION=${NORDVPN_VERSION }
 ## Expose Privoxy traffic
 EXPOSE 8118
 HEALTHCHECK --start-period=10s --timeout=3s \
@@ -58,3 +58,8 @@ RUN apt-get update -qq \
 ## Refactor iptables for host archetecture
 RUN if [ "${TARGETARCH}" != "amd64" ]; then SANITY_CHECK='--no-sanity-check'; fi \
   && /usr/local/bin/iptables-wrapper-installer.sh ${SANITY_CHECK}
+# MESHNET Config
+RUN if [ "${MESHNET}" = "Enable" ]; then meshnet_config
+
+ENV S6_CMD_WAIT_FOR_SERVICES=1
+CMD nord_login && nord_config && nord_connect && nord_migrate && nord_watch
