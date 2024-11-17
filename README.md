@@ -36,8 +36,7 @@ Optimized for NordLynx:
 
 Wireguard on the host
 
-- You <ins>must</ins> install Wireguard on your <ins>host</ins> in order to leverage NordLynx
-
+- You <ins>must</ins> install Wireguard on your <ins>host</ins> in order to leverage NordLynx.  On Ubuntu, 'sudo apt install wireguard-tools'.
 Capabilities
 
 - [NET_ADMIN](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities)
@@ -155,6 +154,7 @@ Using the NordVPN API<span id="api"></span>
 
 - [bubuntux](https://github.com/bubuntux)
 - [kubernetes-sigs](https://github.com/kubernetes-sigs)
+- [tmknight](https://github.com/tmknight)
 
 ## Disclaimers
 
