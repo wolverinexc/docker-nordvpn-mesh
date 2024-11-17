@@ -69,6 +69,27 @@ DNS
 
   - Note, this is not the same as the [DNS environment variable](#env-dns)
 
+
+MESHNET
+# Info/Scripts for Meshnet from https://github.com/MattsTechInfo/Meshnet
+
+#### Meshnet Permissions
+In this version of NordVPN, permissions must be configured directly on the client. NordVPN currently ALLOWS all peers connected to Meshnet by default for Fileshare and Remote access services and DENIES Routing and Local network services. Configuring peer permissions through the NordVPN account website is still in development and not currently available.
+
+This container will run DENY configuration first, followed by ALLOW. ALLOW will overwrite the DENY! Entering a peer in both DENY and ALLOW will first DENY the peer and then overwrite it with an ALLOW.
+                                                                                                                                                                                 Peers must be entered with their FQDN/Name assigned by Meshnet, comma separated, example: `peer-atlas.nord,peer-fuji.nord`
+
+- `NORDVPN_DENY_PEER_ROUTING` - Block peers from using this node as a router.
+- `NORDVPN_DENY_PEER_LOCAL` - Block peers from accessing the local network of this node.
+- `NORDVPN_DENY_PEER_FILESHARE` - Block peers from sharing files with this node.
+- `NORDVPN_DENY_PEER_REMOTE` - Block peers from remote access to this node.
+
+
+- `NORDVPN_ALLOW_PEER_ROUTING` - Allow peers to use this node as a router.
+- `NORDVPN_ALLOW_PEER_LOCAL` - Allow peers to access the local network of this node (ROUTING permissions required!).
+- `NORDVPN_ALLOW_PEER_FILESHARE` - Allow peers to  sharing files with this node.
+- `NORDVPN_ALLOW_PEER_REMOTE` = Allow peers to use remote access on this node.
+
 ## Environment Variables
 
 Generally, the default settings will provide a great experience, however, several environment variables are available to provide flexibility:
@@ -81,11 +102,19 @@ Generally, the default settings will provide a great experience, however, severa
 | **CONNECTION_FILTERS**<span id="env-filters"></span> |                          | To connect to the fastest, lowest load server of special interest. Use the [NordVPN API](#api) to help craft your filters; largely for OpenVPN, though useful with NordLynx when wanting to set a specific country/city (e.g `filters[country_city_id]=8980922`)                                        |
 | **CONNECT** ||Provide a [country] (`Australia`), [server] (`jp35`), [country_code] (`us`), [city] (`Hungary Budapest`) or [group] (`Onion_Over_VPN`) (note CONNECT overrides CONNECTION_FILTERS; use one or the other)|
 | **CYBER_SEC**                   | FALSE                    | Learn more at [NordVPN](https://nordvpn.com/features/cybersec/) (TRUE/FALSE)                                                                                                                                                              |
-| **DNS**<span id="env-dns"></span> |                          | A comma-separated list of IPv4/IPv6 addresses to be set as the VPN tunnel DNS servers, or non-IP hostnames to be set as the tunnel's DNS search domains (leave unset to use NordVPN servers)                                          |
+| **DNS**<span id="env-dns"></span> |                          | A comma-separated list of IPv4/IPv6 addresses to be set as the VPN tunnel DNS servers, or non-IP hostnames to be set as the tunnel's DNS search domains (leave unset to use NordVPN servers)                                            |
 | **FIREWALL**                    | TRUE                     | Use the NordVPN firewall over iptables (TRUE/FALSE; will default to FALSE when `BYPASS_LIST` in use)                                                                                                                                      |
 | **KILLSWITCH**                  | TRUE                     | Use the NordVPN kill switch; `FIREWALL` must also be TRUE (TRUE/FALSE)                                                                                                                                                                    |
-| **NET_LOCAL**<span id="env-netlocal"></span> |                          | Add a route to local IPv4 network once the VPN is up; the Docker network is automatically added; must be CIDR IPv4 format (e.g. `192.168.1.0/24`)                                                                                         |
+| **NET_LOCAL**<span id="env-netlocal"></span> |                          | Add a route to local IPv4 network once the VPN is up; the Docker network is automatically added; must be CIDR IPv4 format (e.g. `192.168.1.0/24`)                                                                            |
 | **NET6_LOCAL**                  |                          | Add a route to local IPv4 network once the VPN is up; the Docker network is automatically added; must be CIDR IPv6 format (e.g. `fe00:d34d:b33f::/64`)                                                                                    |
+| **NORDVPN_DENY_PEER_ROUTING**   |                          | Block peers from using this node as a router.                                                                                                                                                                                             |
+| **NORDVPN_DENY_PEER_LOCAL**     |                          | Block peers from accessing the local network of this node.                                                                                                                                                                                |
+| **NORDVPN_DENY_PEER_FILESHARE** |                          | Block peers from sharing files with this node.                                                                                                                                                                                            |
+| **NORDVPN_DENY_PEER_REMOTE**    |                          | Block peers from remote access to this node.                                                                                                                                                                                              |
+| **NORDVPN_ALLOW_PEER_ROUTING**  |                          | Allow peers from using this node as a router.                                                                                                                                                                                             |
+| **NORDVPN_ALLOW_PEER_LOCAL**    |                          | Allow peers from accessing the local network of this node.                                                                                                                                                                                |
+| **NORDVPN_ALLOW_PEER_FILESHARE**|                          | Allow peers from sharing files with this node.                                                                                                                                                                                            |
+| **NORDVPN_ALLOW_PEER_REMOTE**   |                          | Allow peers from remote access to this node.                                                                                                                                                                                              |
 | **OBFUSCATE**                   | FALSE                    | Only valid when using TECHNOLOGY OpenVPN; learn more at [NordVPN](https://nordvpn.com/features/obfuscated-servers/) (TRUE/FALSE)                                                                                                          |
 | **PORT_RANGE**                  |                          | Port range to whitelist for both UDP and TCP; (e.g. `PORT_RANGE=9091 9095`)                                                                                                                                                               |
 | **PORTS**                       |                          | Semicolon delimited list of ports to whitelist for both UDP and TCP; (e.g `PORTS=9091;9095`)                                                                                                                                              |
@@ -93,8 +122,8 @@ Generally, the default settings will provide a great experience, however, severa
 | **PRE_CONNECT**                 |                          | Command to execute before attempt to connect                                                                                                                                                                                              |
 | **PROTOCOL**                    | UDP                      | Only valid when using TECHNOLOGY OpenVPN (TCP/UDP)                                                                                                                                                                                        |
 | **REFRESH_CONNECTION_INTERVAL** | 120                      | Time in minutes to trigger VPN reconnection to help ensure best connection available (0 = disable)                                                                                                                                                      |
-| **TECHNOLOGY**<span id="env-technology"></span> | NordLynx                 | Specify the VPN Technology to use (NordLynx/OpenVPN)                                                                           |
-| **TOKEN**<span id="env-token"></span> |                          | Generated from your [NordVPN account web portal](https://my.nordaccount.com/dashboard/nordvpn/)                                                                                                                    |
+| **TECHNOLOGY**<span id="env-technology"></span> | NordLynx                 | Specify the VPN Technology to use (NordLynx/OpenVPN)                                                                                                                                                                      |
+| **TOKEN**<span id="env-token"></span> |                          | Generated from your [NordVPN account web portal](https://my.nordaccount.com/dashboard/nordvpn/)                                                                                                                                     |
 
 ## Troubleshooting
 
